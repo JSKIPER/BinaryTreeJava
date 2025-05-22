@@ -8,6 +8,7 @@ public class Main {
         BinaryTree binaryTree = new BinaryTree();
         // options for joption pane
         String[] options = {"Display", "Insert", "Remove","Find"};
+        String[] options2 = {"Pre Order", "In Order", "Post Order"};
         // try catch for errors
         try{
             // infinite loop
@@ -31,8 +32,22 @@ public class Main {
                 // switch case
                 switch (choice) {
                     case 0: // display
+                        int choice2 = JOptionPane.showOptionDialog(
+                                null,
+                                "Select an action",
+                                "Binary Tree",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                options2,
+                                options2[0]
+                        );
+                        if (choice2 == -1) {
+                            JOptionPane.showMessageDialog(null, "Bye!");
+                            break;
+                        }
                         // calling function in binary tree to display it returning String
-                        JOptionPane.showMessageDialog(null, binaryTree.display());
+                        JOptionPane.showMessageDialog(null, binaryTree.display(choice2));
                         break;
 
                     case 1: // insert
@@ -165,21 +180,42 @@ class BinaryTree {
     }
 
     //  Output the entire contents of the tree in order
-    public String display() {
-        // reseting display values and calling recursive function to output value of binary tree in order and returnig string for JOptionPane
+    public String display(int choice) {
+        // reseting display values and calling recursive function to output value of binary tree in/post/pre order and returnig string for JOptionPane
         displayValues ="";
-        displayRecursive(root);
+        if(choice == 0){
+            preorderRecursive(root);
+        }else if(choice == 1){
+            inorderRecursive(root);
+        }else if(choice == 2){
+            postorderRecursive(root);
+        }
         return displayValues.toString();
 
 
     }
 
-    private void displayRecursive(Node node) {
+    private void inorderRecursive(Node node) {
         // we are going to the lowest left then stopping recursion adding value to string the calling right child and doing again until we went over all values from lowest to biggest
         if (node != null) {
-            displayRecursive(node.left);
+            inorderRecursive(node.left);
             displayValues += node.value + "\n";
-            displayRecursive(node.right);
+            inorderRecursive(node.right);
+        }
+    }
+    // same principle for others
+    private void preorderRecursive(Node node) {
+        if (node != null) {
+            displayValues += node.value + "\n"; // Visit root
+            preorderRecursive(node.left);       // Visit left
+            preorderRecursive(node.right);      // Visit right
+        }
+    }
+    private void postorderRecursive(Node node) {
+        if (node != null) {
+            postorderRecursive(node.left);       // Visit left
+            postorderRecursive(node.right);      // Visit right
+            displayValues += node.value + "\n";  // Visit root
         }
     }
     // function to find specific value
